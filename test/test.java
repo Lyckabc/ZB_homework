@@ -1,5 +1,7 @@
-package baekjoon;
+package test;
 
+import java.util.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -7,36 +9,46 @@ import java.util.Stack;
 
 public class test {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        List<Integer> numbers = new ArrayList<>();
-        for (int i = 0; i < n; i++) { // n 만큼 숫자를 입력해서 numbers 에 저장한다.
-            numbers.add(Integer.parseInt(scanner.next()));
+        // 예제 데이터
+        String data = "abcde";
+        int A = 3;
+        int M = 11;
+
+        // 초기 해시 값 계산
+        int initialHash = rollingHash(data, A, M);
+        System.out.println("Initial Hash Value: " + initialHash);
+
+        // 데이터의 첫 문자를 제거하고 새로운 문자 'f'를 추가하여 롤링 해시 업데이트
+        String updatedData = "bcdef";
+        int updatedHash = rollingHashUpdate(initialHash, data.charAt(0), updatedData.charAt(updatedData.length() - 1), A, M, data.length());
+        updatedHash = (updatedHash + M) % M; // 음수를 방지하기 위해 추가
+        System.out.println("Updated Hash Value: " + updatedHash);
+    }
+
+    public static int rollingHash(String data, int A, int M) {
+        int hashValue = 0;
+
+        for (int i = 0; i < data.length(); i++) {
+            hashValue = (hashValue * A + data.charAt(i)) % M;
         }
-        List<Stack<Integer>> stackList = new ArrayList<>();
-        for (int i = 0; i < 4; i++) { // 1 부터 시작이므로 0을 미리 저장한다.
-            stackList.add(new Stack<>());
-            stackList.get(i).push(0);
-        }
-        boolean isFlag = true;
-        for (int number : numbers) {
-            boolean isNumber = false;
-            for (Stack<Integer> integers : stackList) {
-                if (number > integers.peek()) { // 리스트 안에 스택 한개를 꺼내서 맨위의 값을 꺼냈을 때 스택에 있는애보다 크면 스택에 저장
-                    integers.push(number);
-                    isNumber = true; // number 가 더 크면 true 하고 멈추기
-                    break;
-                }
+
+        return hashValue;
+    }
+
+    public static int rollingHashUpdate(int prevHash, char removedChar, char addedChar, int A, int M, int length) {
+        int updatedHash = (prevHash * A + addedChar - removedChar * pow(A, length - 1, M)) % M;
+        return updatedHash;
+    }
+
+    public static int pow(int base, int exponent, int mod) {
+        int result = 1;
+        while (exponent > 0) {
+            if (exponent % 2 == 1) {
+                result = (result * base) % mod;
             }
-            if (!isNumber) { // 숫자가 작거나 같아서 true 로 바뀌지 않았다면 제일 밖에 for 문 정지
-                isFlag = false;
-                break;
-            }
+            base = (int) (((long) base * base) % mod);
+            exponent /= 2;
         }
-        if (isFlag) { // 모든 숫자들을 스택에 저장할 수 있었으면 YES 그렇지 않으면 NO
-            System.out.println("YES");
-        } else {
-            System.out.println("NO");
-        }
+        return result;
     }
 }
