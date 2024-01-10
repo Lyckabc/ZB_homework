@@ -75,23 +75,23 @@ public class ZBMini05 {
     
     private static void PrintSet(String[][] CalendarArray, int row) {
         if (row == 0) {
-            System.out.print(String.format("%-40s", CalendarArray[0][0]));
+            System.out.print(String.format("%s\t\t\t", CalendarArray[0][0]));
         } else if (row == 1) {
             for (int i = 0; i < 7 ; i++) {
                     System.out.printf(CalendarArray[row][i]);
                 if (i != 6) {
-                    System.out.printf("%-5s", "");
+                    System.out.printf("%s\t", "");
                 }
             }
         } else {
             for (int i = 0; i < 7; i++) {
                 if (CalendarArray[row][i] == null || CalendarArray[row][i].isEmpty()) { //(stirng != null && !string.isEmpty())
-                    System.out.printf("%-4s", " ");
+                    System.out.printf("\t");
                 } else {
-                    System.out.printf("%-4s", CalendarArray[row][i]);
+                    System.out.printf("%s", CalendarArray[row][i]);
                 }
                 if (i != 6) {
-                    System.out.printf("%-2s", "");
+                    System.out.printf("\t");
                 }
             }
         }
